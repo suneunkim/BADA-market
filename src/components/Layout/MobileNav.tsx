@@ -5,9 +5,9 @@ const MobileNav = () => {
   const classes = "flex flex-col items-center space-y-2 hover:text-sky-500";
   return (
     <div className="mx-auto w-full max-w-xl">
-      <header className="fixed top-0 z-10 flex h-14 w-full max-w-xl items-center justify-center space-x-5 py-3 text-lg font-medium text-gray-800">
+      <header className="fixed top-0 z-10 flex h-14 w-full max-w-xl items-center justify-center space-x-5 bg-white py-3 text-lg font-medium text-gray-800">
         <img className="w-14" src="bada-market.png" alt="Logo" />
-        <p>바꿔쓰고 나눠쓰는 바다 마켓</p>
+        <p>바꿔쓰고 다시쓰는 바다 마켓</p>
       </header>
       <nav className="fixed bottom-0 flex w-full max-w-xl items-center justify-between border-t bg-white px-5 py-4 text-sm text-gray-800">
         <Link href="/">
