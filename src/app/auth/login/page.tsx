@@ -1,7 +1,7 @@
 "use client";
 import Button from "@/components/UI/Button";
 import Input from "@/components/UI/Input";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -19,15 +19,15 @@ const LoginPage = () => {
     defaultValues: {
       name: "",
       email: "",
-      paswword: "",
+      password: "",
     },
   });
 
   const onValid: SubmitHandler<FieldValues> = async (formData: any) => {
     setIsLoading(true);
     try {
-      const data = signIn("credentials", formData);
-      // router.replace("/");
+      await signIn("credentials", formData);
+      router.replace("/");
     } catch (error) {
       console.error(error);
     } finally {
@@ -45,14 +45,6 @@ const LoginPage = () => {
         <h1 className="pb-5 text-center text-lg font-semibold text-neutral-700">
           바다 마켓을 둘러보고 물건을 사고 팔거나 교환해보세요!
         </h1>
-        <Input
-          id="name"
-          type="text"
-          label="닉네임"
-          register={register}
-          errors={errors}
-          disabled={isLoading}
-        />
         <Input
           id="email"
           type="text"
