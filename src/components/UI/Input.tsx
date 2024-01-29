@@ -4,12 +4,13 @@ import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 interface InputProps {
   id: string;
   label: string;
-  type: string;
+  type?: string;
   disabled?: boolean;
   formatPrice?: boolean;
   register: UseFormRegister<FieldValues>;
   required?: boolean;
   errors: FieldErrors;
+  textarea?: boolean;
   [key: string]: any;
 }
 
@@ -22,6 +23,7 @@ const Input = ({
   register,
   required,
   errors,
+  textarea,
   ...rest
 }: InputProps) => {
   return (
@@ -48,20 +50,36 @@ const Input = ({
             ₩
           </span>
         )}
-        <input
-          id={id}
-          disabled={disabled}
-          type={type}
-          {...register(id, { required: "내용을 입력해주세요" })}
-          {...rest}
-          className={`w-full rounded-md border p-2 shadow-sm transition 
+        {!textarea ? (
+          <input
+            id={id}
+            disabled={disabled}
+            type={type}
+            {...register(id, { required: "내용을 입력해주세요" })}
+            {...rest}
+            className={`w-full rounded-md border p-2 shadow-sm transition 
           focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400
           disabled:cursor-not-allowed disabled:opacity-80 
           ${formatPrice ? "pl-8" : ""}
           ${errors[id] ? "border-red-500" : "border-neutral-300"}
           ${errors[id] ? "focus:border-rose-500" : "focus:border-black"}
         `}
-        />
+          />
+        ) : (
+          <textarea
+            id={id}
+            disabled={disabled}
+            {...register(id, { required })}
+            rows={4}
+            {...rest}
+            className={`w-full rounded-md border p-2 shadow-sm transition 
+        focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400
+        disabled:cursor-not-allowed disabled:opacity-70 
+        ${errors[id] ? "border-red-500" : "border-neutral-300"}
+        ${errors[id] ? "focus:border-rose-500" : "focus:border-black"}
+      `}
+          />
+        )}
       </div>
     </div>
   );
