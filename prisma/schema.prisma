@@ -10,3 +10,121 @@ datasource db {
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
+
+model Account {
+  id                 String    @id @default(cuid())
+  userId             String
+  providerType       String
+  providerId         String
+  providerAccountId  String
+  refreshToken       String?
+  accessToken        String?
+  accessTokenExpires DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  user               User      @relation(fields: [userId], references: [id])
+
+  @@unique([providerId, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  expires      DateTime
+  sessionToken String   @unique
+  accessToken  String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model VerificationRequest {
+  id         String   @id @default(cuid())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, token])
+}
+
+model User {
+  id               String         @id @default(cuid())
+  name             String?
+  hashedPassword   String?
+  email            String?        @unique
+  emailVerified    DateTime?
+  image            String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  accounts         Account[]
+  sessions         Session[]
+  product          Product[]
+  favs             Fav[]
+  conversations    Conversation[]
+  sentMessages     Message[]      @relation("sender")
+  receivedMessages Message[]      @relation("receiver")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  price       Int
+  latitude    Float
+  longitude   Float
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  imageSrc    String
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+  category    String?
+  favs        Fav[]
+
+  @@index([userId])
+}
+
+model Fav {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  createAt  DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([productId])
+}
+
+model Conversation {
+  id         Int       @id @default(autoincrement())
+  createAt   DateTime  @default(now())
+  name       String?
+  senderId   String
+  receiverId String
+  users      User[]
+  messages   Message[]
+}
+
+model Message {
+  id             Int          @id @default(autoincrement())
+  createAt       DateTime     @default(now())
+  updateAt       DateTime     @updatedAt
+  text           String?      @db.MediumText
+  image          String?
+  sender         User         @relation(name: "sender", fields: [senderId], references: [id])
+  senderId       String
+  receiver       User         @relation(name: "receiver", fields: [receiverId], references: [id])
+  receiverId     String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId Int
+
+  @@index([conversationId])
+  @@index([receiverId])
+  @@index([senderId])
+}
