@@ -1,10 +1,11 @@
 "use client";
 import ImageUploader from "@/components/ImageUploader";
 import Container from "@/components/Layout/Container";
+import Button from "@/components/UI/Button";
 import Heading from "@/components/UI/Heading";
 import Input from "@/components/UI/Input";
 import React, { useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 // input과 사진이 담길 UI가 필요
 // 이미지 업로드 위한 CDN과 업로드 함수 만들기
@@ -25,18 +26,33 @@ const UploadPage = () => {
       category: "",
       latitude: 31.5523,
       longitude: 122.7951,
-      imageSrc: "",
+      imageSrc: [],
       price: "",
     },
   });
+
+  const imageSrc = watch("imageSrc");
+  const customSetValue = (id: string, value: string) => {
+    // onChange로 value 받고 RHF의 setValue 이용
+    setValue(id, value);
+  };
+
+  const onValid: SubmitHandler<FieldValues> = async (formData) => {};
+
   return (
     <Container>
-      <form className="w-[85%] space-y-8 pb-10 pt-5 sm:w-[650px]">
+      <form
+        onSubmit={handleSubmit(onValid)}
+        className="h-full w-[85%] space-y-8 pb-10 pt-5 sm:w-[650px]"
+      >
         <Heading
           title="내 물건 팔기"
           subtitle="물건을 등록하면 물물교환 신청도 가능해요!"
         />
-        <ImageUploader />
+        <ImageUploader
+          value={imageSrc}
+          onChange={(value) => customSetValue("imageSrc", value)}
+        />
         <Input
           id="title"
           label="제목"
@@ -65,6 +81,7 @@ const UploadPage = () => {
           formatPrice
           required
         />
+        <Button label="제출하기" />
       </form>
     </Container>
   );

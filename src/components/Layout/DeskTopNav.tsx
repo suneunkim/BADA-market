@@ -3,7 +3,20 @@ import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 
-const DeskTopNav = ({ currentUser }: any) => {
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  image: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface NavProps {
+  currentUser: User;
+}
+
+const DeskTopNav = ({ currentUser }: NavProps) => {
   const handleAuthentication = () => {
     if (currentUser === null) {
       signIn();
@@ -11,8 +24,6 @@ const DeskTopNav = ({ currentUser }: any) => {
       signOut();
     }
   };
-
-  console.log("DeskTopNav", currentUser);
 
   return (
     <div className="fixed top-0 z-10 flex h-14 w-full items-center justify-between border border-b bg-sky-200 px-10 py-3">
