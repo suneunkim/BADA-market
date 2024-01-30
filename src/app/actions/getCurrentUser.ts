@@ -1,15 +1,14 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import client from "@/helpers/client";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export async function getSession() {
-  return await getServerSession(authOptions);
-  // 로그인 한 유저의 세션 정보
-}
-
-export default async function getCurrentUser() {
+export default async function getCurrentUser(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   try {
-    const session = await getSession();
+    const session = await getServerSession(req, res, authOptions);
 
     if (!session?.user?.email) {
       return null;

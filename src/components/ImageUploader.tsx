@@ -4,23 +4,19 @@ import React, { useEffect, useState } from "react";
 import { TbPhotoPlus } from "react-icons/tb";
 
 interface ImageUploaderProps {
-  onChange: (value: string) => void;
-  value: string;
+  onChange: (value: string[]) => void;
+  value: string[];
 }
 
 const ImageUploader = ({ onChange, value }: ImageUploaderProps) => {
-  const [showImages, setShowImages] = useState<string[]>([]);
+  const [showImages, setShowImages] = useState<string[]>(value);
 
   const handleUpload = (result: any) => {
-    const newImage = result.info.secure_url;
+    const newImage: string = result.info.secure_url;
     const newImages = [...showImages, newImage];
     setShowImages(newImages);
-    onChange(result.info.secure_url);
+    onChange(newImages);
   };
-
-  useEffect(() => {
-    console.log(showImages);
-  }, [showImages]);
 
   const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
@@ -37,7 +33,7 @@ const ImageUploader = ({ onChange, value }: ImageUploaderProps) => {
           <div>
             {showImages.length > 0 ? (
               // 미리보기
-              <div className="flex w-full justify-around space-x-2 border-4">
+              <div className="flex w-full justify-around space-x-2">
                 {value &&
                   showImages.map((image, index) => (
                     <div
@@ -66,28 +62,6 @@ const ImageUploader = ({ onChange, value }: ImageUploaderProps) => {
                 <TbPhotoPlus size={50} />
               </div>
             )}
-
-            {/* <div className="flex justify-around w-full">
-              {value &&
-                showImages.map((image, i) => (
-                  <div key={i} className="">
-                    <Image
-                      style={{ objectFit: "contain" }}
-                      src={image}
-                      alt="image"
-                      width={250}
-                      height={250}
-                    />
-                    <Image
-            className="object-cover w-full h-full "
-            src={data?.imageSrc}
-            fill
-            sizes="auto"
-            alt="상품 이미지"
-          />
-                  </div>
-                ))}
-            </div> */}
           </div>
         );
       }}

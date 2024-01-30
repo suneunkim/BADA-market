@@ -4,6 +4,7 @@ import Container from "@/components/Layout/Container";
 import Button from "@/components/UI/Button";
 import Heading from "@/components/UI/Heading";
 import Input from "@/components/UI/Input";
+import axios from "axios";
 import React, { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
@@ -21,23 +22,30 @@ const UploadPage = () => {
     setValue,
   } = useForm<FieldValues>({
     defaultValues: {
+      imageSrc: [],
       title: "",
       description: "",
-      category: "",
+      price: "",
       latitude: 31.5523,
       longitude: 122.7951,
-      imageSrc: [],
-      price: "",
     },
   });
 
   const imageSrc = watch("imageSrc");
-  const customSetValue = (id: string, value: string) => {
+  const customSetValue = (id: string, value: string[]) => {
     // onChange로 value 받고 RHF의 setValue 이용
     setValue(id, value);
   };
 
-  const onValid: SubmitHandler<FieldValues> = async (formData) => {};
+  const onValid: SubmitHandler<FieldValues> = async (formData) => {
+    // if (imageSrc.length === 0) {
+    //   alert("판매하려는 상품의 이미지를 꼭 등록해주세요");
+    //   return;
+    // }
+
+    const { data } = await axios.post("/api/products/upload", formData);
+    console.log("data", data);
+  };
 
   return (
     <Container>

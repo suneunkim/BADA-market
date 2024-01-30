@@ -5,15 +5,15 @@ import React from "react";
 
 interface User {
   id: string;
-  name: string;
-  email: string;
+  name: string | null;
+  email: string | null;
   image: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
 
 interface NavProps {
-  currentUser: User;
+  currentUser: User | null;
 }
 
 const DeskTopNav = ({ currentUser }: NavProps) => {

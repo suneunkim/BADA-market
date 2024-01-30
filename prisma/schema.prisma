@@ -71,21 +71,29 @@ model User {
 }
 
 model Product {
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   id          Int      @id @default(autoincrement())
   title       String
   description String
   price       Int
   latitude    Float
   longitude   Float
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
-  imageSrc    String
   createAt    DateTime @default(now())
   updateAt    DateTime @updatedAt
-  category    String?
+  images      Image[]
   favs        Fav[]
 
   @@index([userId])
+}
+
+model Image {
+  id        Int     @id @default(autoincrement())
+  url       String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+
+  @@index([productId])
 }
 
 model Fav {
