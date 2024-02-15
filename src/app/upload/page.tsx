@@ -7,11 +7,13 @@ import Heading from "@/components/UI/Heading";
 import Input from "@/components/UI/Input";
 import axios from "axios";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import React, { Suspense, useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 const UploadPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -62,9 +64,12 @@ const UploadPage = () => {
     //   alert("판매하려는 상품의 이미지를 꼭 등록해주세요");
     //   return;
     // }
-
-    const { data } = await axios.post("/api/products/upload", formData);
-    console.log("data", data);
+    try {
+      const { data } = await axios.post("/api/products/upload", formData);
+      router.push(`/products/${data.product.id}`);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
