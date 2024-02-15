@@ -9,7 +9,7 @@ const MobileNav = () => {
         <img className="w-14" src="bada-market.png" alt="Logo" />
         <p>바꿔쓰고 다시쓰는 바다 마켓</p>
       </header>
-      <nav className="fixed bottom-0 flex w-full max-w-xl items-center justify-between border-t bg-white px-5 py-4 text-sm text-gray-800">
+      <nav className="fixed bottom-0 z-10 flex w-full max-w-xl items-center justify-between border-t bg-white px-5 py-4 text-sm text-gray-800">
         <Link href="/">
           <div className={classes}>
             <svg
