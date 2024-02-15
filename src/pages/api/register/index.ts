@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import prisma from "@/helpers/client";
+import client from "@/helpers/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
@@ -7,7 +7,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const existingUser = await prisma.user.findUnique({
+  const existingUser = await client.user.findUnique({
     where: {
       email,
     },
@@ -17,7 +17,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     return res.json({ ok: false, errorMessage: "이미 가입된 메일입니다." });
   }
 
-  const user = await prisma.user.create({
+  const user = await client.user.create({
     data: {
       email,
       name,

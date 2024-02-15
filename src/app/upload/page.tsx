@@ -1,16 +1,14 @@
 "use client";
 import ImageUploader from "@/components/ImageUploader";
+import KakaoMap from "@/components/KakaoMap";
 import Container from "@/components/Layout/Container";
 import Button from "@/components/UI/Button";
 import Heading from "@/components/UI/Heading";
 import Input from "@/components/UI/Input";
 import axios from "axios";
-import React, { useState } from "react";
+import dynamic from "next/dynamic";
+import React, { Suspense, useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-
-// input과 사진이 담길 UI가 필요
-// 이미지 업로드 위한 CDN과 업로드 함수 만들기
-// 카카오 지도 API 이용해야함
 
 const UploadPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,10 +28,32 @@ const UploadPage = () => {
       longitude: 122.7951,
     },
   });
-
   const imageSrc = watch("imageSrc");
-  const customSetValue = (id: string, value: string[]) => {
-    // onChange로 value 받고 RHF의 setValue 이용
+  const latitude = watch("latitude");
+  const longitude = watch("longitude");
+
+  // 빌드할 때 말고 런타임 때 동작해야 함
+  const KakaoMap = dynamic(() => import("../../components/KakaoMap"), {
+    ssr: false,
+    loading: () => <div>로딩중...</div>,
+  });
+
+  // 현재 위치로 지도를 설정. Map의 center를 수정해준다.
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setValue("latitude", position.coords.latitude);
+        setValue("longitude", position.coords.longitude);
+      },
+      (error) => {
+        console.error(error);
+      },
+    );
+  }, []);
+
+  const customSetValue = (id: string, value: string[] | number) => {
+    // ImageUploader에서 onChange -> 등록한 이미지의 배열을 value 받고 RHF의 setValue 이용해서 값을 업데이트
+    // KakaoMap에서 유저가 선택한 위도와 경도를 받아서 값을 업데이트
     setValue(id, value);
   };
 
@@ -89,6 +109,14 @@ const UploadPage = () => {
           formatPrice
           required
         />
+        <hr />
+        <Suspense fallback={<p>로딩중입니다.</p>}>
+          <KakaoMap
+            customSetValue={customSetValue}
+            latitude={latitude}
+            longitude={longitude}
+          />
+        </Suspense>
         <Button label="제출하기" />
       </form>
     </Container>
