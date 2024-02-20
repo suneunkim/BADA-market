@@ -14,26 +14,25 @@ interface ProductCardProps {
 
 const ProductCard = ({ data, key }: ProductCardProps) => {
   const router = useRouter();
+  const firstImage = data?.images.length > 0 ? data.images[0].url : null;
   return (
     <div
       onClick={() => router.push(`/products/${data.id}`)}
       className="w-[200px] cursor-pointer sm:w-[260px]"
     >
-      {data?.images.length > 0 ? (
-        data?.images.map((img) => (
-          <div
-            key={img.url}
-            className="relative aspect-square w-full overflow-hidden rounded-lg"
-          >
-            <Image
-              className="w-full object-cover"
-              src={img.url}
-              fill
-              sizes="auto"
-              alt="상품 이미지"
-            />
-          </div>
-        ))
+      {firstImage ? (
+        <div
+          key={firstImage}
+          className="relative aspect-square w-full overflow-hidden rounded-lg"
+        >
+          <Image
+            className="w-full object-cover"
+            src={firstImage}
+            fill
+            sizes="auto"
+            alt="상품 이미지"
+          />
+        </div>
       ) : (
         <NoImage />
       )}
