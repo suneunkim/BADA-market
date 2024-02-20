@@ -6,7 +6,7 @@ import Button from "@/components/UI/Button";
 import { Product, User } from "@prisma/client";
 import axios from "axios";
 import dynamic from "next/dynamic";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 
 export interface ImageProps {
@@ -21,7 +21,15 @@ interface ProductClientProps {
 
 const ProductClient = ({ product }: ProductClientProps) => {
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-  const { data, error } = useSWR("/api/user", fetcher);
+  const { data: userData, error } = useSWR("/api/user", fetcher);
+
+  const [loggedUserId, setloggedUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (userData && userData.ok && userData.currentUser) {
+      setloggedUserId(userData.currentUser.id);
+    }
+  }, [userData]);
 
   const KakaoMap = dynamic(() => import("../../../components/KakaoMap"), {
     ssr: false,
@@ -46,7 +54,7 @@ const ProductClient = ({ product }: ProductClientProps) => {
           latitude={product.latitude}
           longitude={product.longitude}
         />
-        <Button label="대화하기" disabled={data?.ok} />
+        <Button label="대화하기" disabled={loggedUserId === product.userId} />
       </div>
     </Container>
   );
