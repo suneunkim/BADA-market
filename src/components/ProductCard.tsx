@@ -21,7 +21,10 @@ const ProductCard = ({ data, key }: ProductCardProps) => {
     >
       {data?.images.length > 0 ? (
         data?.images.map((img) => (
-          <div className="relative aspect-square w-full overflow-hidden rounded-lg">
+          <div
+            key={img.url}
+            className="relative aspect-square w-full overflow-hidden rounded-lg"
+          >
             <Image
               className="w-full object-cover"
               src={img.url}

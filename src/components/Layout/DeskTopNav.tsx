@@ -23,10 +23,10 @@ const DeskTopNav = () => {
   const { data, error } = useSWR("/api/user", fetcher);
 
   const handleAuthentication = () => {
-    if (data?.ok) {
-      signIn();
-    } else {
+    if (data?.currentUser) {
       signOut();
+    } else {
+      signIn();
     }
   };
 
