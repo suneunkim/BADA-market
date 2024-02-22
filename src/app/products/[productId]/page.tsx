@@ -7,7 +7,8 @@ interface Params {
 }
 
 const ProductPage = async ({ params }: { params: Params }) => {
-  const product = await getProductById(params);
+  const productId = params.productId;
+  const product = await getProductById(productId);
 
   if (!product) {
     return <div>상품이 존재하지 않습니다.</div>;

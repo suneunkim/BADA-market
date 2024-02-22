@@ -1,13 +1,9 @@
 import client from "@/helpers/client";
 
-interface ProductParams {
-  productId: string;
-}
+export default async function getProductById(productId: string) {
+  if (!productId) return;
 
-export default async function getProductById(params: ProductParams) {
   try {
-    const { productId } = params;
-
     const product = await client.product.findUnique({
       where: {
         id: Number(productId),
